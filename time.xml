@@ -1,0 +1,143 @@
+<data>
+	<types>
+		<Work color="#b603fc" />
+		<Schoolwork color="#fcd703" />
+		<Mat110 color="#f779b2" />
+		<Mat255 color="#fc8c03" />
+		<Thl200 color="#b1ff7d" />
+		<Csc101 color="#96fff3" />
+		<Code color="#61bdff" />
+		<Music color="#9061ff" />
+		<Eating color="#bd9677" />
+		<DoctorWho color="#444ec2" />
+		<ListeningToMusic color="#ffca38" />
+		<AtConcordia color="#9e9686" />
+		<Friends color="#1ed658" />
+		<Gaming color="#00ff00" />
+		<InBed color="#ffbdd7" />
+		<Horny color="#a10800" />
+		<Sleep color="#fff2b8" />
+		<YouTube color="#ff0000" />
+		<Shower color="#363dc7" />
+	</types>
+	<entries next_id="151">
+		<Work id="0" begin="1695387600" end="1695394800" />
+		<Schoolwork id="1" begin="1695391200" end="1695412800" />
+		<Mat255 id="2" begin="1695391200" end="1695398400" />
+		<Mat110 id="3" begin="1695398400" end="1695400200" />
+		<Thl200 id="4" begin="1695409500" end="1695412500" />
+		<Eating id="5" begin="1695426300" end="1695427800" />
+		<DoctorWho id="6" begin="1695428100" end="1695432300" />
+		<AtConcordia id="7" begin="1695387600" end="1695412800" />
+		<Code id="8" begin="1695416400" end="1695426300" />
+		<Code id="9" begin="1695428100" end="1695438900" />
+		<ListeningToMusic id="10" begin="1695432300" end="1695437100" />
+		<Gaming id="11" begin="1695438696" end="1695441251" />
+		<Friends id="12" begin="1695437233" end="1695449839" />
+		<Gaming id="13" begin="1695441600" end="1695449880" />
+		<InBed id="14" begin="1695450074" end="1695483631" />
+		<Gaming id="15" begin="1695450000" end="1695450960" />
+		<Horny id="16" begin="1695451080" end="1695453300" />
+		<Sleep id="17" begin="1695453600" end="1695473460" />
+		<Sleep id="18" begin="1695473460" end="1695477600" />
+		<Sleep id="19" begin="1695477600" end="1695483540" />
+		<Coffee id="20" begin="1695485194" end="1695486116" />
+		<Mat110 id="21" begin="1695485203" end="1695487080" />
+		<Work id="22" begin="1695646800" end="1695654000" />
+		<Csc101 id="23" begin="1695650959" end="1695653903" />
+		<Schoolwork id="24" begin="1695485199" end="1695495214" />
+		<Csc101 id="25" begin="1695487203" end="1695495220" />
+		<ListeningToMusic id="26" begin="1695487196" end="1695495225" />
+		<Mowing id="27" begin="1695495180" end="1695495780" />
+		<Schoolwork id="28" begin="1695495780" end="1695497280" />
+		<Csc101 id="29" begin="1695495780" end="1695497280" />
+		<Eating id="30" begin="1695497280" end="1695498300" />
+		<Code id="31" begin="1695500622" end="1695514474" />
+		<YouTube id="32" begin="1695498804" end="1695514480" />
+		<Shower id="33" begin="1695514500" end="1695516249" />
+		<YouTube id="34" begin="1695516263" end="1695520634" />
+		<Code id="35" begin="1695516625" end="1695520636" />
+		<Eating id="36" begin="1695520800" end="1695524154" />
+		<YouTube id="37" begin="1695523486" end="1695536498" />
+		<Code id="38" begin="1695524954" end="1695536504" />
+		<InBed id="39" begin="1695536655" end="1695566784" />
+		<Coffee id="40" begin="1695567000" end="1695567666" />
+		<Horny id="41" begin="1695537600" end="1695538560" />
+		<Sleep id="42" begin="1695538800" end="1695564000" />
+		<Sleep id="43" begin="1695564000" end="1695566700" />
+		<ListeningToMusic id="44" begin="1695568194" end="1695586767" />
+		<Code id="45" begin="1695568204" end="1695586770" />
+		<Shower id="46" begin="1695587100" end="1695588536" />
+		<DoctorWho id="47" begin="1695588600" end="1695592553" />
+		<YouTube id="48" begin="1695598317" end="1695598331" />
+		<Code id="49" begin="1695608280" end="1695610669" />
+		<YouTube id="50" begin="1695606060" end="1695612000" />
+		<InBed id="51" begin="1695612000" end="1695644100" />
+		<Horny id="52" begin="1695614340" end="1695614700" />
+		<Sleep id="53" begin="1695625200" end="1695643200" />
+		<Sleep id="54" begin="1695643200" end="1695644160" />
+		<ListeningToMusic id="55" begin="1695648364" end="1695653932" />
+		<Schoolwork id="56" begin="1695648751" end="1695653938" />
+		<ListeningToMusic id="57" begin="1695654321" end="1695658786" />
+		<Mat255 id="58" begin="1695654350" end="1695664183" />
+		<Schoolwork id="59" begin="1695654325" end="1695664187" />
+		<Eating id="60" begin="1695664201" end="1695668562" />
+		<YouTube id="61" begin="1695664800" end="1695668400" />
+		<YouTube id="55" begin="1695674604" end="1695675825" />
+		<Thl200 id="56" begin="1695668700" end="1695671700" />
+		<Piano id="57" begin="1695672000" end="1695673500" />
+		<AtConcordia id="58" begin="1695646800" end="1695673800" />
+		<Schoolwork id="59" begin="1695668700" end="1695671700" />
+		<Eating id="60" begin="1695598380" end="1695600000" />
+		<MakingMead id="61" begin="1695600000" end="1695605400" />
+		<Thl200 id="62" begin="1695677715" end="1695680007" />
+		<ListeningToMusic id="63" begin="1695678676" end="1695684638" />
+		<Csc101 id="64" begin="1695680115" end="1695684645" />
+		<Schoolwork id="65" begin="1695677709" end="1695684648" />
+		<Eating id="66" begin="1695684600" end="1695687300" />
+		<DoctorWho id="67" begin="1695686426" end="1695692654" />
+		<YouTube id="68" begin="1695692876" end="1695697280" />
+		<Code id="69" begin="1695693690" end="1695697282" />
+		<InBed id="71" begin="1695697806" end="1695737919" />
+		<Horny id="72" begin="1695698760" end="1695699600" />
+		<Sleep id="74" begin="812174400" end="1695725340" />
+		<Sleep id="75" begin="1695726000" end="1695733200" />
+		<Sleep id="76" begin="1695733200" end="1695735900" />
+		<Sleep id="77" begin="1695735900" end="1695736800" />
+		<Sleep id="78" begin="1695736800" end="1695737700" />
+		<Work id="79" begin="1695751200" end="1695765600" />
+		<Biking id="80" begin="1695765900" end="1695767100" />
+		<Eating id="81" begin="1695744300" end="1695750300" />
+		<YouTube id="82" begin="1695744300" end="1695747000" />
+		<Csc101 id="83" begin="1695747000" end="1695763560" />
+		<Schoolwork id="84" begin="1695747000" end="1695763560" />
+		<ListeningToMusic id="85" begin="1695747000" end="1695763560" />
+		<ListeningToMusic id="86" begin="1695765000" end="1695765600" />
+		<AtConcordia id="87" begin="1695739500" end="1695765600" />
+		<Coffee id="88" begin="1695738600" end="1695739500" />
+		<Mat110 id="89" begin="1695739500" end="1695744000" />
+		<Schoolwork id="90" begin="1695739500" end="1695744000" />
+		<ListeningToMusic id="91" begin="1695768600" end="1695775525" />
+		<Eating id="92" begin="1695773886" end="1695775817" />
+		<DoctorWho id="93" begin="1695774000" end="1695784579" />
+		<Code id="94" begin="1695768600" end="1695786180" />
+		<ListeningToMusic id="95" begin="1695784565" end="1695786189" />
+		<Gaming id="96" begin="1695786600" end="1695788031" />
+		<Horny id="97" begin="1695788042" end="1695789099" />
+		<Sleep id="99" begin="1695792600" end="1695816120" />
+		<InBed id="100" begin="1695786600" end="1695817182" />
+		<Shower id="101" begin="1695817800" end="1695818400" />
+		<Horny id="102" begin="1695826800" end="1695827533" />
+		<Csc101 id="103" begin="1695827580" end="1695832500" />
+		<Schoolwork id="104" begin="1695827520" end="1695837000" />
+		<ListeningToMusic id="105" begin="1695827520" end="1695832500" />
+		<Mat255 id="107" begin="1695832500" end="1695836400" />
+		<Eating id="108" begin="1695837026" end="1695841160" />
+		<Piano id="109" begin="1695845067" end="1695846715" />
+		<YouTube id="110" begin="1695837000" end="1695841200" />
+		<Thl200 id="111" begin="1695841500" end="1695844800" />
+		<Work id="112" begin="1695819600" end="1695826800" />
+	<Schoolwork id="113" begin="1695841500" end="1695844800" /><AtConcordia id="114" begin="1695819600" end="1695846600" /><Eating id="115" begin="1695857400" end="1695858600" /><DoctorWho id="116" begin="1695857400" end="1695867629" /><Code id="117" begin="1695860100" end="1695867632" /><Therapy id="118" begin="1695852000" end="1695855600" /><Horny id="119" begin="1695848100" end="1695849000" /><Horny id="120" begin="1695870000" end="1695870657" /><InBed id="121" begin="1695868291" end="1695910439" /><Sleep id="122" begin="1695871800" end="1695896640" /><Sleep id="123" begin="1695896760" end="1695902040" /><Sleep id="124" begin="1695902280" end="1695906000" /><Sleep id="125" begin="1695906000" end="1695906900" /><Sleep id="126" begin="1695906900" end="1695907800" /><Sleep id="127" begin="1695907800" end="1695908700" /><Sleep id="128" begin="1695908700" end="1695909600" /><Schoolwork id="129" begin="1695912300" end="1695916800" /><Mat110 id="130" begin="1695912300" end="1695916800" /><Eating id="131" begin="1695916800" end="1695918600" /><YouTube id="132" begin="1695916800" end="1695922200" /><Biking id="133" begin="1695935151" end="1695936312" /><Coding id="134" begin="1695937142" end="1695940273" /><Mat255 id="135" begin="1695940279" end="1695944652" /><Csc101 id="136" begin="1695944886" end="1695949221" /><Schoolwork id="137" begin="1695940276" end="1695949552" /><Work id="138" begin="1695922200" end="1695934800" /><AtConcordia id="139" begin="1695912300" end="1695934800" /><ListeningToMusic id="140" begin="1695923100" end="1695934800" /><Eating id="141" begin="1695948000" end="1695950400" /><RankingImprov id="142" begin="1695923100" end="1695934800" /><RankingImprov id="143" begin="1695939600" end="1695952515" /><ListeningToMusic id="144" begin="1695939600" end="1695952519" /><Bath id="145" begin="1695952522" end="1695954232" /><Gaming id="146" begin="1695954900" end="1695961045" /><RankingImprov id="147" begin="1695954238" end="1695961052" /><ListeningToMusic id="148" begin="1695954235" end="1695961059" /><Horny id="149" begin="1695961323" end="1695961800" /><InBed id="150" begin="1695961020" end="1695989109" /></entries>
+	<current>
+		<Code begin="1695997154" /></current>
+</data>
