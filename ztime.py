@@ -37,7 +37,7 @@ def instructions():
 	log("type".rjust(10), f"| {Fore.GREEN}type {Fore.RED}color{Style.RESET_ALL}")
 	log("remove".rjust(10), f"| {Fore.YELLOW}id{Style.RESET_ALL}")
 	log("modify".rjust(10), f"| {Fore.YELLOW}id {Fore.GREEN}type {Fore.BLUE}begin end{Style.RESET_ALL}".ljust(32+4*5), f"{Style.DIM}alias: edit{Style.RESET_ALL}")
-	log("list".rjust(10), f"| {Fore.YELLOW}{Style.DIM}start end{Style.RESET_ALL}")
+	log("list".rjust(10), f"| {Fore.YELLOW}{Style.DIM}start end {Fore.GREEN}filter{Style.RESET_ALL}")
 	log("start".rjust(10), f"| {Fore.GREEN}type{Style.RESET_ALL}".ljust(32+2*5), f"{Style.DIM}alias: begin{Style.RESET_ALL}")
 	log("types".rjust(10), "| ")
 	log("running".rjust(10), "| ")
@@ -125,7 +125,7 @@ def ztime_main(argv):
 
 		for entry in entries:
 			id = int(entry.attrib.get("id"))
-			if id >= low and id < high:
+			if id >= low and id < high and ((entry.tag == argv[4]) if len(argv) > 4 else True):
 				output += entry.tag.ljust(tag_width)
 				output += (" ({:"+str(id_width)+"d}) ").format(id)
 				output += dt.datetime.fromtimestamp(int(entry.attrib.get("begin"))).strftime("%d/%m/%y %I:%M %p")

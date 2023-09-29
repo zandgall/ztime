@@ -2,11 +2,7 @@
 #include <fstream>
 #include <iostream>
 
-#ifdef WIN32
 #define DOC_PATH "time.xml"
-#else
-#define DOC_PATH "/home/zandgall/time.xml"
-#endif
 
 TimeDoc::TimeDoc() {    
     std::ifstream input(DOC_PATH);
