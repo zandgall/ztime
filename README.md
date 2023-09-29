@@ -21,7 +21,7 @@ A CLI application that allows quick command-line modification of time data. Also
 [^3]: This argument is a type. Simply the name of an activity for whatever time entry you are starting, stopping, adding, or modifying.
 [^4]: This argument is an ID. IDs are given when a time entry is created. However you can also use the (list) command in order to see time entries and their IDs.
 
-## ztime-cpp
+## ztime-cpp:
 A GUI application that allows the easy viewing of time entries. Letting you zoom in and out while retaining legibility, allowing you to thoroughly explore the data.
 ------
 Soon I expect to integrate the ability to modify the time entries in the GUI program. Along with adding different ways to filter and view the data, including measuring tools.
