@@ -39,6 +39,7 @@ def instructions():
 	log("start".rjust(10), f"| {Fore.GREEN}type{Style.RESET_ALL}".ljust(32+2*5), f"{Style.DIM}alias: begin{Style.RESET_ALL}")
 	log("types".rjust(10), "| ")
 	log("running".rjust(10), "| ")
+	log("stat".rjust(10), f"| {Fore.GREEN}type {Fore.BLUE}begin end{Style.RESET_ALL}")
 
 def ztime_main(argv, doc_path):
 	global log_string
@@ -189,14 +190,55 @@ def ztime_main(argv, doc_path):
 				max_len = len(run.tag)
 		for run in running:
 			log(run.tag.rjust(max_len+2), "|", dt.datetime.fromtimestamp(int(run.attrib.get("begin"))).strftime("%d/%m/%y %I:%M %p"))
+	elif argv[1] == "stat":
+		if len(argv) < 4:
+			log("Usage: stat 'type' 'begin' [end]")
+			return log_string
+		stat(argv, doc_path)
 	else:
 		instructions()
 	return log_string
 
-
-
 def intersect(a_begin, a_end, b_begin, b_end):
 	return int(a_end) > int(b_begin) and int(a_begin) < int(b_end)
+
+def stat(argv, doc_path):
+	tree = ET.parse(doc_path)
+	entries = tree.getroot().find("entries")
+	type = argv[2]
+	begin = unix_time(argv[3])
+	end = unix_time(argv[4]) if len(argv) > 4 else int(time.mktime(dt.datetime.now().timetuple()))
+
+	time_spent = 0
+	for entry in entries:
+		if entry.tag==type and intersect(entry.attrib["begin"], entry.attrib["end"], begin, end):
+			time_spent += min(end, int(entry.attrib["end"])) - max(begin, int(entry.attrib["begin"]))
+
+	def time_length_string(time):
+		time_string = str(int(time) % 60) + " seconds"
+		if time > 60:
+			time_string = str(int(time / 60) % 60) + " minutes, " + time_string
+		if time > 3600:
+			time_string = str(int(time / 3600) % 24) + " hours, " + time_string
+		if time > 86400:
+			time_string = str(int(time / 86400)) + " days, " + time_string
+		return time_string
+
+	log("Statistics on", type)
+	log("~~~~~~~~~~~~~~"+"~"*len(type))
+	log("-", str(int(time_spent)), "seconds")
+	if time_spent > 60:
+		log("-", str(int(time_spent/6)/10), "minutes")
+	if time_spent > 3600:
+		log("-", str(int(time_spent/360)/10), "hours")
+	if time_spent > 86400:
+		log("-", str(int(time_spent/864)/100), "days")
+	log("Or,", time_length_string(time_spent))
+	log("~~~~~~~~~~~~~~"+"~"*len(type))
+	if end-begin > 86400*2:
+		log(time_length_string(time_spent / ((end-begin)/86400)), "per day")
+	if end-begin > 86400*14:
+		log(time_length_string(time_spent / ((end-begin)/604800)), "per week")
 
 def draw(argv, doc_path):
 	tree = ET.parse(doc_path)

@@ -19,6 +19,7 @@ A CLI application that allows quick command-line modification of time data. Also
 | start | type, start* | Marks the given type as 'running,' with the stop command, gives you the ability to mark the beginning and end of an activity in real time. If the (start) argument is present, uses that as the beginning time instead of the time the command was entered. | begin |
 | stop | type, end* | Stops a running type. Adds it as a time entry. If (end) argument is present, uses that as the end time instead of the time the command was run. | end |
 | running | &nbsp; | Lists currently running types. | &nbsp; |
+| stat | type, begin, end* | Displays statistics about the selected type between the begin and end time. (Or current time if end not present.) Tells you how much time has been spent on the activity, how much time was spent on the activity per day, and shows how much time spent per week. (When applicable.) | &nbsp; |
 
 *\*optional*
 [^1]: This argument is a time. It will be parsed from a human readable format. The user can enter "8am" or "9/26/2023 16:45" if they choose.
