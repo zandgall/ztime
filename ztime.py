@@ -30,7 +30,7 @@ def log(*strings):
 def instructions():
 	log("Time taking tool. ")
 	log("\nPossible commands:")
-	log("draw".rjust(10), f"| {Fore.BLUE}begin {Style.DIM}end {Fore.WHITE}width{Style.RESET_ALL}")
+	log("draw".rjust(10), f"| {Fore.BLUE}begin {Style.DIM}end {Fore.WHITE}width {Fore.GREEN}filters...{Style.RESET_ALL}")
 	log("enter".rjust(10), f"| {Fore.GREEN}type {Fore.BLUE}begin end{Style.RESET_ALL}".ljust(32+3*5), f"{Style.DIM}alias: add{Style.RESET_ALL}")
 	log("type".rjust(10), f"| {Fore.GREEN}type {Fore.RED}color{Style.RESET_ALL}")
 	log("remove".rjust(10), f"| {Fore.YELLOW}id{Style.RESET_ALL}")
@@ -55,7 +55,7 @@ def ztime_main(argv, doc_path):
 
 	if argv[1] == "draw":
 		if len(argv) < 3:
-			log("Usage: draw 'begin' [end]")
+			log("Usage: draw 'begin' [end] [filters..]")
 			return log_string
 		draw(argv, doc_path)
 	elif argv[1] == "enter" or argv[1] == "add":
@@ -206,14 +206,23 @@ def draw(argv, doc_path):
 	low = unix_time(argv[2])
 	high = unix_time(argv[3]) if len(argv) > 3 else int(time.mktime(dt.datetime.now().timetuple()))
 
-	width = int(argv[4]) if len(argv) > 4 else 3600
+	widthProvided = len(argv) > 4 and argv[4].isnumeric()
+	width = int(argv[4]) if widthProvided else 3600
 	height = 120
+
+	filterStart = 5 if widthProvided else 4
+	filter = len(argv) > filterStart
 
 	def get_x(timestamp):
 		return width * (int(timestamp) - low) / (high - low)
 
 	for entry in entries:
-		if intersect(low, high, entry.attrib["begin"], entry.attrib["end"]):
+		matchesFilter = not filter
+		if filter:
+			for f in range(filterStart, len(argv)):
+				if argv[f] == entry.tag:
+					matchesFilter = True
+		if intersect(low, high, entry.attrib["begin"], entry.attrib["end"]) and matchesFilter:
 			level = 0
 			i = 0
 			while i < len(included_entries):
