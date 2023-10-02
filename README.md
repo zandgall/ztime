@@ -10,20 +10,22 @@ A CLI application that allows quick command-line modification of time data. Also
 
 | command | arguments | output | aliases |
 | --- | --- | --- | --- |
-| draw | begin[^1], end[^1][^2], width[^2] | Creates an image of time entries from the beginning time, to the end time (if not present, uses current time). The image will have a width of 3600, if width arg is not present. | &nbsp; |
-| enter | type[^3], begin[^1], end[^1][^2] | Adds a time entry, with the name being (type), spanning from beginning to end, or the current time, if end isn't present. The command will then print the ID of the time entry created, which can be used to modify or remove this entry. | add |
-| type | type[^3], color | Adds (type) to the type palette, assigning it the color given. Color should be a hex color string, with the '#' included. This color is used when drawing an image with the draw command. | &nbsp; |
-| remove | id[^4] | Removes the entry with the ID provided | &nbsp; |
-| modify | id[^4], type[^3], begin[^1], end[^1] | Modifies the entry with the ID provided, changing its type, begin, and end as given. | edit |
-| list | start[^4], end[^4] | Lists all time entries with an ID between (start) and (end) inclusive. | &nbsp; |
-| start | type[^3], start[^1][^2] | Marks the given type as 'running,' with the stop command, gives you the ability to mark the beginning and end of an activity in real time. If the (start) argument is present, uses that as the beginning time instead of the time the command was entered. | begin |
-| stop | type[^3], end[^1][^2] | Stops a running type. Adds it as a time entry. If (end) argument is present, uses that as the end time instead of the time the command was run. | end |
+| draw | begin time[^1], end time, width* | Creates an image of time entries from the beginning time, to the end time (if not present, uses current time). The image will have a width of 3600, if width arg is not present. | &nbsp; |
+| enter | type[^3], begin time, end time* | Adds a time entry, with the name being (type), spanning from beginning to end, or the current time, if end isn't present. The command will then print the ID of the time entry created, which can be used to modify or remove this entry. | add |
+| type | type, color[^4] | Adds (type) to the type palette, assigning it the color given. Color should be a hex color string, with the '#' included. This color is used when drawing an image with the draw command. | &nbsp; |
+| remove | id[^5] | Removes the entry with the ID provided | &nbsp; |
+| modify | id, type, begin, end | Modifies the entry with the ID provided, changing its type, begin time, and end time as given. | edit |
+| list | start, end, filter* | Lists all time entries with an ID between (start) and (end) inclusive. If filter is present, only lists entries with the same name as (filter). | &nbsp; |
+| start | type, start* | Marks the given type as 'running,' with the stop command, gives you the ability to mark the beginning and end of an activity in real time. If the (start) argument is present, uses that as the beginning time instead of the time the command was entered. | begin |
+| stop | type, end* | Stops a running type. Adds it as a time entry. If (end) argument is present, uses that as the end time instead of the time the command was run. | end |
 | running | &nbsp; | Lists currently running types. | &nbsp; |
 
+*\*optional*
 [^1]: This argument is a time. It will be parsed from a human readable format. The user can enter "8am" or "9/26/2023 16:45" if they choose.
 [^2]: This argument is optional. The command will work without it. Read the command output to see what happens if it is omitted.
 [^3]: This argument is a type. Simply the name of an activity for whatever time entry you are starting, stopping, adding, or modifying.
-[^4]: This argument is an ID. IDs are given when a time entry is created. However you can also use the (list) command in order to see time entries and their IDs.
+[^4]: Colors are hex strings. In the form "#rrggbb" where rr (reg), gg (green), and bb (blue), are given in hexadecimal.
+[^5]: This argument is an ID. IDs are given when a time entry is created. However you can also use the (list) command in order to see time entries and their IDs.
 
 ## ztime-cpp:
 
