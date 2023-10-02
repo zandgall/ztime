@@ -13,8 +13,6 @@ from PIL import Image, ImageDraw, ImageFont
 from colorama import Fore, Style
 import colorsys
 
-DOC_PATH = "/mnt/Code/c++/ztime/time.xml"
-
 def unix_time(string):
 	return int(time.mktime(parse(string).timetuple()))
 
@@ -42,37 +40,43 @@ def instructions():
 	log("types".rjust(10), "| ")
 	log("running".rjust(10), "| ")
 
-def ztime_main(argv):
+def ztime_main(argv, doc_path):
 	global log_string
 	log_string = ""
 	if len(argv) <= 1:
 		instructions()
 		return log_string
+	
+	# Create time.xml document if it doesn't exist
+	if not os.path.isfile(doc_path):
+		log(f"Couldn't find \"{doc_path}\", creating file.")
+		tree = ET.fromstring("<data><types></types><entries></entries><current></current></data>")
+		tree.write(doc_path)
 
 	if argv[1] == "draw":
 		if len(argv) < 3:
 			log("Usage: draw 'begin' [end]")
 			return log_string
-		draw(argv)
+		draw(argv, doc_path)
 	elif argv[1] == "enter" or argv[1] == "add":
 		if len(argv) < 4:
 			log("Usage: enter 'type' 'begin' [end]")
 			return log_string
 
-		tree = ET.parse(DOC_PATH)
+		tree = ET.parse(doc_path)
 		entries = tree.getroot().find("entries")
 		end = sunix_time(argv[4]) if len(argv) > 4 else str(int(time.mktime(dt.datetime.now().timetuple())))
 		entry = ET.SubElement(entries, argv[2])
 		entry.attrib.update(id=entries.attrib.get("next_id"), begin=sunix_time(argv[3]), end=end)
 		entries.attrib.update(next_id=str(int(entries.attrib.get("next_id"))+1))
-		tree.write(DOC_PATH)
+		tree.write(doc_path)
 		log("Entered", argv[2], "(", entry.attrib.get("id"), ")")
 	elif argv[1] == "type":
 		if len(argv) < 4:
 			log("Usage: type 'type' 'hex color'")
 			return log_string
 
-		tree = ET.parse(DOC_PATH)
+		tree = ET.parse(doc_path)
 		types = tree.getroot().find("types")
 		type = types.find(argv[2])
 		action = "Modified type"
@@ -80,34 +84,34 @@ def ztime_main(argv):
 			type = ET.SubElement(types, argv[2])
 			action = "Added type"
 		type.attrib.update(color=argv[3])
-		tree.write(DOC_PATH)
+		tree.write(doc_path)
 		log(action, argv[2], argv[3])
 	elif argv[1] == "remove":
 		if len(argv) < 3:
 			log("Usage: remove 'id'")
 			return log_string
 
-		tree = ET.parse(DOC_PATH)
+		tree = ET.parse(doc_path)
 		entries = tree.getroot().find("entries")
 
 		entry = entries.find(".//*[@id='"+argv[2]+"']")
 		name = entry.tag
 
 		entries.remove(entry)
-		tree.write(DOC_PATH)
+		tree.write(doc_path)
 		log("Removed", name, "(", argv[2], ")")
 	elif argv[1] == "modify" or argv[1] == "edit":
 		if len(argv) < 6:
 			log("Usage: modify 'id' 'type' 'begin' 'end'")
 			return log_string
 
-		tree = ET.parse(DOC_PATH)
+		tree = ET.parse(doc_path)
 		entries = tree.getroot().find("entries")
 
 		entry = entries.find(".//*[@id='"+argv[2]+"']")
 		entry.tag = argv[3]
 		entry.attrib.update(begin=sunix_time(argv[4]), end=sunix_time(argv[5]))
-		tree.write(DOC_PATH)
+		tree.write(doc_path)
 		log("Modified", argv[3], "(", entry.attrib.get("id"), ")")
 	elif argv[1] == "list":
 		output = "TIME ENTRIES\n~~~~~~~~~~~~\n\n"
@@ -115,7 +119,7 @@ def ztime_main(argv):
 		low = int(argv[2]) if len(argv)>2 else 0
 		high = int(argv[3]) if len(argv)>3 else 10000000
 
-		tree = ET.parse(DOC_PATH)
+		tree = ET.parse(doc_path)
 		entries = tree.getroot().find("entries")
 
 		columns = os.get_terminal_size().columns
@@ -137,20 +141,20 @@ def ztime_main(argv):
 		if len(argv) < 3:
 			log("Usage: start 'type'")
 		type = argv[2]
-		tree = ET.parse(DOC_PATH)
+		tree = ET.parse(doc_path)
 		current = tree.getroot().find("current")
 		for running in current:
 			if running.tag == type:
 				log(type, "already running!")
 				return log_string
 		ET.SubElement(current, type, {"begin": sunix_time(argv[3]) if len(argv) > 3 else str(int(time.mktime(dt.datetime.now().timetuple())))})
-		tree.write(DOC_PATH)
+		tree.write(doc_path)
 		log("Started", type)
 	elif argv[1] == "stop" or argv[1] == "end":
 		if len(argv) < 3:
 			log("Usage: stop 'type'")
 		type = argv[2]
-		tree = ET.parse(DOC_PATH)
+		tree = ET.parse(doc_path)
 		current = tree.getroot().find("current")
 		for running in current:
 			if running.tag == type:
@@ -161,13 +165,13 @@ def ztime_main(argv):
 				entries.attrib.update(next_id=str(int(entries.attrib.get("next_id"))+1))
 
 				current.remove(running)
-				tree.write(DOC_PATH)
+				tree.write(doc_path)
 				log("Entered", type, "(", entry.attrib.get("id"), ")")
 				return log_string
 		log("Couldn't find", type)
 	elif argv[1] == "types":
 
-		tree = ET.parse(DOC_PATH)
+		tree = ET.parse(doc_path)
 		types = tree.getroot().find("types")
 		max_len = 5
 		for type in types:
@@ -177,7 +181,7 @@ def ztime_main(argv):
 			log(type.tag.rjust(max_len+2), "|", type.attrib["color"])
 	elif argv[1] == "running":
 
-		tree = ET.parse(DOC_PATH)
+		tree = ET.parse(doc_path)
 		running = tree.getroot().find("current")
 		max_len = 5
 		for run in running:
@@ -194,8 +198,8 @@ def ztime_main(argv):
 def intersect(a_begin, a_end, b_begin, b_end):
 	return int(a_end) > int(b_begin) and int(a_begin) < int(b_end)
 
-def draw(argv):
-	tree = ET.parse(DOC_PATH)
+def draw(argv, doc_path):
+	tree = ET.parse(doc_path)
 	entries = tree.getroot().find("entries")
 	included_entries = []
 
@@ -285,4 +289,4 @@ def draw(argv):
 	image.save("time.png")
 
 if __name__ == "__main__":
-	ztime_main(sys.argv)
+	ztime_main(sys.argv, "time.xml")
