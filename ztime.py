@@ -133,9 +133,9 @@ def ztime_main(argv, doc_path):
 			if id >= low and id < high and ((entry.tag == argv[4]) if len(argv) > 4 else True):
 				output += entry.tag.ljust(tag_width)
 				output += (" ({:"+str(id_width)+"d}) ").format(id)
-				output += dt.datetime.fromtimestamp(int(entry.attrib.get("begin"))).strftime("%d/%m/%y %I:%M %p")
+				output += dt.datetime.fromtimestamp(int(entry.attrib.get("begin"))).strftime("%m/%d/%y %I:%M %p")
 				output += " - "
-				output += dt.datetime.fromtimestamp(int(entry.attrib.get("end"))).strftime("%d/%m/%y %I:%M %p")
+				output += dt.datetime.fromtimestamp(int(entry.attrib.get("end"))).strftime("%m/%d/%y %I:%M %p")
 				output += "\n"
 		log(output)
 	elif argv[1] == "start" or argv[1] == "begin":
@@ -189,7 +189,7 @@ def ztime_main(argv, doc_path):
 			if len(run.tag) > max_len:
 				max_len = len(run.tag)
 		for run in running:
-			log(run.tag.rjust(max_len+2), "|", dt.datetime.fromtimestamp(int(run.attrib.get("begin"))).strftime("%d/%m/%y %I:%M %p"))
+			log(run.tag.rjust(max_len+2), "|", dt.datetime.fromtimestamp(int(run.attrib.get("begin"))).strftime("%m/%d/%y %I:%M %p"))
 	elif argv[1] == "stat":
 		if len(argv) < 4:
 			log("Usage: stat 'type' 'begin' [end]")
