@@ -321,16 +321,21 @@ def draw(argv, doc_path):
 
 	for include in included_entries:
 		# print("Drawing", include, get_x(include["xml"].attrib["begin"]), get_x(include["xml"].attrib["end"])-get_x(include["xml"].attrib["begin"]))
-		color = palette[include["xml"].tag] if include["xml"].tag in palette else "#00ffff"
+		color = palette[include["xml"].tag] if include["xml"].tag in palette else "#ffffff"
 		begin = int(include["xml"].attrib["begin"])
 		end = int(include["xml"].attrib["end"])
 		level = include["level"]*120
-
-		draw.rectangle((get_x(begin), level, get_x(end), level+120), fill=color)
+		
+		if end < begin:
+			print(f"Can't draw element <{string_b} id={include['xml'].attrib['id']}> because begin is {dt.datetime.fromtimestamp(begin).strftime('%m/%d/%y %I:%M %p')} while end is {dt.datetime.fromtimestamp(end).strftime('%m/%d/%y %I:%M %p')}")
+			continue
 
 		string_a = dt.datetime.fromtimestamp(begin).strftime("%I:%M %p")
 		string_b = include["xml"].tag
 		string_c = dt.datetime.fromtimestamp(end).strftime("%I:%M %p")
+
+		draw.rectangle((get_x(begin), level, get_x(end), level+120), fill=color)
+		
 		max_width = max(deffont.getlength(string_a), deffont.getlength(string_b), deffont.getlength(string_c))
 		fnt = ImageFont.truetype("basicbit3.ttf", 28 if max_width < get_x(end)-get_x(begin) else int(28*((get_x(end)-get_x(begin))/max_width)))
 		draw.font = fnt
