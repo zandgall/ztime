@@ -27,19 +27,32 @@ def log(*strings):
 		log_string += string.replace(Fore.BLUE, "").replace(Fore.BLACK, "").replace(Fore.CYAN, "").replace(Fore.GREEN, "").replace(Fore.MAGENTA, "").replace(Fore.RED, "").replace(Fore.YELLOW, "").replace(Fore.WHITE, "").replace(Style.BRIGHT, "").replace(Style.DIM, "").replace(Style.NORMAL, "").replace(Style.RESET_ALL, "") + " "
 	log_string += "\n"
 
+command_palette = {
+	"draw": f"{Fore.BLUE}begin {Style.DIM}end {Fore.WHITE}width {Fore.GREEN}filters...{Style.RESET_ALL}",
+	"enter": f"{Fore.GREEN}type {Fore.BLUE}begin {Style.DIM}end{Style.RESET_ALL}".ljust(32+3*5)+f" {Style.DIM}alias: add{Style.RESET_ALL}",
+	"type": f"{Fore.GREEN}type {Fore.RED}color{Style.RESET_ALL}",
+	"remove": f"{Fore.YELLOW}id{Style.RESET_ALL}",
+	"modify": f"{Fore.YELLOW}id {Fore.WHITE}[t|b|e] [{Fore.GREEN}type{Fore.WHITE}|{Fore.BLUE}begin{Fore.WHITE}|{Fore.BLUE}end{Fore.WHITE}]{Style.RESET_ALL}".ljust(32+9*5) + f" {Style.DIM}alias: edit{Style.RESET_ALL}",
+	"list": f"{Fore.YELLOW}{Style.DIM}start end {Fore.GREEN}filter{Style.RESET_ALL}",
+	"start": f"{Fore.GREEN}type{Style.RESET_ALL}".ljust(32+2*5) + f" {Style.DIM}alias: begin{Style.RESET_ALL}",
+	"types": "",
+	"running": "",
+	"stat": f"{Fore.GREEN}type {Fore.BLUE}begin end{Style.RESET_ALL}"
+}
+
 def instructions():
 	log("Time taking tool. ")
 	log("\nPossible commands:")
-	log("draw".rjust(10), f"| {Fore.BLUE}begin {Style.DIM}end {Fore.WHITE}width {Fore.GREEN}filters...{Style.RESET_ALL}")
-	log("enter".rjust(10), f"| {Fore.GREEN}type {Fore.BLUE}begin end{Style.RESET_ALL}".ljust(32+3*5), f"{Style.DIM}alias: add{Style.RESET_ALL}")
-	log("type".rjust(10), f"| {Fore.GREEN}type {Fore.RED}color{Style.RESET_ALL}")
-	log("remove".rjust(10), f"| {Fore.YELLOW}id{Style.RESET_ALL}")
-	log("modify".rjust(10), f"| {Fore.YELLOW}id {Fore.WHITE}[t|b|e] [{Fore.GREEN}type{Fore.WHITE}|{Fore.BLUE}begin{Fore.WHITE}|{Fore.BLUE}end{Fore.WHITE}]{Style.RESET_ALL}".ljust(32+9*5), f"{Style.DIM}alias: edit{Style.RESET_ALL}")
-	log("list".rjust(10), f"| {Fore.YELLOW}{Style.DIM}start end {Fore.GREEN}filter{Style.RESET_ALL}")
-	log("start".rjust(10), f"| {Fore.GREEN}type{Style.RESET_ALL}".ljust(32+2*5), f"{Style.DIM}alias: begin{Style.RESET_ALL}")
+	log("draw".rjust(10), "|", command_palette["draw"])
+	log("enter".rjust(10), "|", command_palette["enter"])
+	log("type".rjust(10), "|", command_palette["type"])
+	log("remove".rjust(10), "|", command_palette["remove"])
+	log("modify".rjust(10), "|", command_palette["modify"])
+	log("list".rjust(10), "|", command_palette["list"])
+	log("start".rjust(10), "|", command_palette["start"])
 	log("types".rjust(10), "| ")
 	log("running".rjust(10), "| ")
-	log("stat".rjust(10), f"| {Fore.GREEN}type {Fore.BLUE}begin end{Style.RESET_ALL}")
+	log("stat".rjust(10), "|", command_palette["stat"])
 
 def ztime_main(argv, doc_path):
 	global log_string
@@ -56,12 +69,12 @@ def ztime_main(argv, doc_path):
 
 	if argv[1] == "draw":
 		if len(argv) < 3:
-			log("Usage: draw 'begin' [end] [filters..]")
+			log("Usage: draw |", command_palette["draw"])
 			return log_string
 		draw(argv, doc_path)
 	elif argv[1] == "enter" or argv[1] == "add":
 		if len(argv) < 4:
-			log("Usage: enter 'type' 'begin' [end]")
+			log("Usage: enter |", command_palette["enter"])
 			return log_string
 
 		tree = ET.parse(doc_path)
@@ -74,7 +87,7 @@ def ztime_main(argv, doc_path):
 		log("Entered", argv[2], "(", entry.attrib.get("id"), ")")
 	elif argv[1] == "type":
 		if len(argv) < 4:
-			log("Usage: type 'type' 'hex color'")
+			log("Usage: type |", command_palette["type"])
 			return log_string
 
 		tree = ET.parse(doc_path)
@@ -89,7 +102,7 @@ def ztime_main(argv, doc_path):
 		log(action, argv[2], argv[3])
 	elif argv[1] == "remove":
 		if len(argv) < 3:
-			log("Usage: remove 'id'")
+			log("Usage: remove |", command_palette["remove"])
 			return log_string
 
 		tree = ET.parse(doc_path)
@@ -103,7 +116,7 @@ def ztime_main(argv, doc_path):
 		log("Removed", name, "(", argv[2], ")")
 	elif argv[1] == "modify" or argv[1] == "edit":
 		if len(argv) < 5:
-			log("Usage: modify 'id' '[t|b|e]' '[type|begin|end]'")
+			log("Usage: modify |", command_palette["modify"])
 			return log_string
 
 		tree = ET.parse(doc_path)
@@ -122,6 +135,10 @@ def ztime_main(argv, doc_path):
 		tree.write(doc_path)
 		log("Modified", entry.tag, "'s", "(", entry.attrib.get("id"), ")")
 	elif argv[1] == "list":
+		if (len(argv)>2 and not argv[2].isnumeric()) or (len(argv)>3 and not argv[3].isnumeric()):
+			log("list: First two arguments need to be an integer!")
+			log("Usage: list |", command_palette["list"])
+			return log_string
 		output = "TIME ENTRIES\n~~~~~~~~~~~~\n\n"
 
 		low = int(argv[2]) if len(argv)>2 else 0
@@ -147,7 +164,8 @@ def ztime_main(argv, doc_path):
 		log(output)
 	elif argv[1] == "start" or argv[1] == "begin":
 		if len(argv) < 3:
-			log("Usage: start 'type'")
+			log("Usage: start |", command_palette["start"])
+			return log_string
 		type = argv[2]
 		tree = ET.parse(doc_path)
 		current = tree.getroot().find("current")
@@ -160,7 +178,9 @@ def ztime_main(argv, doc_path):
 		log("Started", type)
 	elif argv[1] == "stop" or argv[1] == "end":
 		if len(argv) < 3:
-			log("Usage: stop 'type'")
+			log("Usage: stop |", command_palette["stop"])
+			return log_string
+
 		type = argv[2]
 		tree = ET.parse(doc_path)
 		current = tree.getroot().find("current")
@@ -199,7 +219,7 @@ def ztime_main(argv, doc_path):
 			log(run.tag.rjust(max_len+2), "|", dt.datetime.fromtimestamp(int(run.attrib.get("begin"))).strftime("%m/%d/%y %I:%M %p"))
 	elif argv[1] == "stat":
 		if len(argv) < 4:
-			log("Usage: stat 'type' 'begin' [end]")
+			log("Usage: stat |", command_palette["stat"])
 			return log_string
 		stat(argv, doc_path)
 	else:
