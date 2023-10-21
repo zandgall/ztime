@@ -14,7 +14,7 @@ A CLI application that allows quick command-line modification of time data. Also
 | enter | type[^2], begin time, end time* | Adds a time entry, with the name being (type), spanning from beginning to end, or the current time, if end isn't present. The command will then print the ID of the time entry created, which can be used to modify or remove this entry. | add |
 | type | type, color[^3] | Adds (type) to the type palette, assigning it the color given. Color should be a hex color string, with the '#' included. This color is used when drawing an image with the draw command. | &nbsp; |
 | remove | id[^4] | Removes the entry with the ID provided | &nbsp; |
-| modify | id, type, begin, end | Modifies the entry with the ID provided, changing its type, begin time, and end time as given. | edit |
+| modify | id, \[t|b|e\] \[type|begin|end\] | Modifies the entry with the ID provided, changing its type, begin time, or end time, depending on what you specify. | edit |
 | list | start, end, filter* | Lists all time entries with an ID between (start) and (end) inclusive. If filter is present, only lists entries with the same name as (filter). | &nbsp; |
 | start | type, start* | Marks the given type as 'running,' with the stop command, gives you the ability to mark the beginning and end of an activity in real time. If the (start) argument is present, uses that as the beginning time instead of the time the command was entered. | begin |
 | stop | type, end* | Stops a running type. Adds it as a time entry. If (end) argument is present, uses that as the end time instead of the time the command was run. | end |

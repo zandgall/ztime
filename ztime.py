@@ -34,7 +34,7 @@ def instructions():
 	log("enter".rjust(10), f"| {Fore.GREEN}type {Fore.BLUE}begin end{Style.RESET_ALL}".ljust(32+3*5), f"{Style.DIM}alias: add{Style.RESET_ALL}")
 	log("type".rjust(10), f"| {Fore.GREEN}type {Fore.RED}color{Style.RESET_ALL}")
 	log("remove".rjust(10), f"| {Fore.YELLOW}id{Style.RESET_ALL}")
-	log("modify".rjust(10), f"| {Fore.YELLOW}id {Fore.GREEN}type {Fore.BLUE}begin end{Style.RESET_ALL}".ljust(32+4*5), f"{Style.DIM}alias: edit{Style.RESET_ALL}")
+	log("modify".rjust(10), f"| {Fore.YELLOW}id {Fore.WHITE}[t|b|e] [{Fore.GREEN}type{Fore.WHITE}|{Fore.BLUE}begin{Fore.WHITE}|{Fore.BLUE}end{Fore.WHITE}]{Style.RESET_ALL}".ljust(32+9*5), f"{Style.DIM}alias: edit{Style.RESET_ALL}")
 	log("list".rjust(10), f"| {Fore.YELLOW}{Style.DIM}start end {Fore.GREEN}filter{Style.RESET_ALL}")
 	log("start".rjust(10), f"| {Fore.GREEN}type{Style.RESET_ALL}".ljust(32+2*5), f"{Style.DIM}alias: begin{Style.RESET_ALL}")
 	log("types".rjust(10), "| ")
@@ -102,18 +102,25 @@ def ztime_main(argv, doc_path):
 		tree.write(doc_path)
 		log("Removed", name, "(", argv[2], ")")
 	elif argv[1] == "modify" or argv[1] == "edit":
-		if len(argv) < 6:
-			log("Usage: modify 'id' 'type' 'begin' 'end'")
+		if len(argv) < 5:
+			log("Usage: modify 'id' '[t|b|e]' '[type|begin|end]'")
 			return log_string
 
 		tree = ET.parse(doc_path)
 		entries = tree.getroot().find("entries")
 
 		entry = entries.find(".//*[@id='"+argv[2]+"']")
-		entry.tag = argv[3]
-		entry.attrib.update(begin=sunix_time(argv[4]), end=sunix_time(argv[5]))
+		if argv[3] == 't':
+			entry.tag = argv[4]
+			log("(", entry.attrib.get("id"), ") type is now", argv[4])
+		if argv[3] == 'b':
+			entry.attrib.update(begin=sunix_time(argv[4]))
+			log("(", entry.attrib.get("id"), ") begin is now is now", dt.datetime.fromtimestamp(int(entry.attrib.get("begin"))).strftime("%m/%d/%y %I:%M %p"))
+		if argv[3] == 'e':
+			entry.attrib.update(end=sunix_time(argv[4]))
+			log("(", entry.attrib.get("id"), ") end is now is now", dt.datetime.fromtimestamp(int(entry.attrib.get("end"))).strftime("%m/%d/%y %I:%M %p"))
 		tree.write(doc_path)
-		log("Modified", argv[3], "(", entry.attrib.get("id"), ")")
+		log("Modified", entry.tag, "'s", "(", entry.attrib.get("id"), ")")
 	elif argv[1] == "list":
 		output = "TIME ENTRIES\n~~~~~~~~~~~~\n\n"
 
@@ -327,7 +334,7 @@ def draw(argv, doc_path):
 		level = include["level"]*120
 		
 		if end < begin:
-			print(f"Can't draw element <{string_b} id={include['xml'].attrib['id']}> because begin is {dt.datetime.fromtimestamp(begin).strftime('%m/%d/%y %I:%M %p')} while end is {dt.datetime.fromtimestamp(end).strftime('%m/%d/%y %I:%M %p')}")
+			log(f"Can't draw element <{include['xml'].tag} id={include['xml'].attrib['id']}> because begin is {dt.datetime.fromtimestamp(begin).strftime('%m/%d/%y %I:%M %p')} while end is {dt.datetime.fromtimestamp(end).strftime('%m/%d/%y %I:%M %p')}")
 			continue
 
 		string_a = dt.datetime.fromtimestamp(begin).strftime("%I:%M %p")
