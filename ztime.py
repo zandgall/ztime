@@ -46,6 +46,8 @@ command_palette = {
 	"stat": f"{Fore.GREEN}type {Fore.BLUE}begin end{Style.RESET_ALL}"
 }
 
+tree = ""
+
 def instructions():
 	log("Time taking tool. ")
 	log("\nPossible commands:")
@@ -64,7 +66,7 @@ def instructions():
 	log("stat".rjust(10), "|", command_palette["stat"])
 
 def ztime_main(argv, doc_path):
-	global log_string
+	global log_string, tree
 	log_string = ""
 	if len(argv) <= 1:
 		instructions()
@@ -76,47 +78,39 @@ def ztime_main(argv, doc_path):
 		tree = ET.ElementTree(ET.fromstring("<data><types></types><entries></entries><current></current><schedule></schedule></data>"))
 		tree.write(doc_path)
 
+	tree = ET.parse(doc_path)
+
 	if argv[1] == "draw":
 		if len(argv) < 3:
 			log("Usage: draw |", command_palette["draw"])
 			return log_string
-		draw(argv, doc_path)
+		draw(argv)
 	elif argv[1] == "print":
 		if len(argv) < 3:
 			log("Usage: print |", command_pallete["print"])
 			return log_string
-		ztime_print(argv, doc_path)
+		ztime_print(argv)
 	elif argv[1] == "schedule":
 		if len(argv) < 4:
 			log("Usage: schedule |", command_palette["schedule"])
 			return log_string
 		
-		tree = ET.parse(doc_path)
 		schedule = tree.getroot().find("schedule")
 		end = sunix_time(argv[4]) if len(argv) > 4 else str(int(time.mktime(dt.datetime.now().timetuple())))
 		entry = ET.SubElement(schedule, argv[2])
 		entry.attrib.update(begin=sunix_time(argv[3]), end=end)
-		tree.write(doc_path)
 		log("Scheduled", argv[2])
 	elif argv[1] == "enter" or argv[1] == "add":
 		if len(argv) < 4:
 			log("Usage: enter |", command_palette["enter"])
 			return log_string
 
-		tree = ET.parse(doc_path)
-		entries = tree.getroot().find("entries")
-		end = sunix_time(argv[4]) if len(argv) > 4 else str(int(time.mktime(dt.datetime.now().timetuple())))
-		entry = ET.SubElement(entries, argv[2])
-		entry.attrib.update(id=entries.attrib.get("next_id"), begin=sunix_time(argv[3]), end=end)
-		entries.attrib.update(next_id=str(int(entries.attrib.get("next_id"))+1))
-		tree.write(doc_path)
-		log("Entered", argv[2], "(", entry.attrib.get("id"), ")")
+		add_time_entry(argv[2], sunix_time(argv[3]), sunix_time(argv[4]) if len(argv) > 4 else current_sunix_time())
 	elif argv[1] == "type":
 		if len(argv) < 4:
 			log("Usage: type |", command_palette["type"])
 			return log_string
 
-		tree = ET.parse(doc_path)
 		types = tree.getroot().find("types")
 		type = types.find(argv[2])
 		action = "Modified type"
@@ -124,28 +118,24 @@ def ztime_main(argv, doc_path):
 			type = ET.SubElement(types, argv[2])
 			action = "Added type"
 		type.attrib.update(color=argv[3])
-		tree.write(doc_path)
 		log(action, argv[2], argv[3])
 	elif argv[1] == "remove":
 		if len(argv) < 3:
 			log("Usage: remove |", command_palette["remove"])
 			return log_string
 
-		tree = ET.parse(doc_path)
 		entries = tree.getroot().find("entries")
 
 		entry = entries.find(".//*[@id='"+argv[2]+"']")
 		name = entry.tag
 
 		entries.remove(entry)
-		tree.write(doc_path)
 		log("Removed", name, "(", argv[2], ")")
 	elif argv[1] == "modify" or argv[1] == "edit":
 		if len(argv) < 5:
 			log("Usage: modify |", command_palette["modify"])
 			return log_string
 
-		tree = ET.parse(doc_path)
 		entries = tree.getroot().find("entries")
 
 		entry = entries.find(".//*[@id='"+argv[2]+"']")
@@ -158,7 +148,6 @@ def ztime_main(argv, doc_path):
 		if argv[3] == 'e':
 			entry.attrib.update(end=sunix_time(argv[4]))
 			log("(", entry.attrib.get("id"), ") end is now is now", dt.datetime.fromtimestamp(int(entry.attrib.get("end"))).strftime("%m/%d/%y %H:%M"))
-		tree.write(doc_path)
 		log("Modified", entry.tag, "'s", "(", entry.attrib.get("id"), ")")
 	elif argv[1] == "list":
 		if (len(argv)>2 and not argv[2].isnumeric()) or (len(argv)>3 and not argv[3].isnumeric()):
@@ -170,7 +159,6 @@ def ztime_main(argv, doc_path):
 		low = int(argv[2]) if len(argv)>2 else 0
 		high = int(argv[3]) if len(argv)>3 else 10000000
 
-		tree = ET.parse(doc_path)
 		entries = tree.getroot().find("entries")
 
 		columns = os.get_terminal_size().columns
@@ -200,13 +188,9 @@ def ztime_main(argv, doc_path):
 				log(type, "already running!")
 				return log_string
 		ET.SubElement(current, type, {"begin": sunix_time(argv[3]) if len(argv) > 3 else str(int(time.mktime(dt.datetime.now().timetuple())))})
-		tree.write(doc_path)
 		log("Started", type)
 	elif argv[1] == "resolve":
-		log("Hello!")
-		tree = ET.parse(doc_path)
 		schedule = tree.getroot().find("schedule")
-		entries = tree.getroot().find("entries")
 		for scheduled in schedule:
 			log("Is \"", scheduled.tag, "\" (", dt.datetime.fromtimestamp(int(scheduled.attrib.get("begin"))).strftime("%m/%d/%y %H:%M"), " - ", dt.datetime.fromtimestamp(int(scheduled.attrib.get("end"))).strftime("%m/%d/%y %H:%M"), ") ready? Y/N: ")
 			resp = input()
@@ -230,37 +214,26 @@ def ztime_main(argv, doc_path):
 			else:
 				end = sunix_time(end)
 			
-			entry = ET.SubElement(entries, tag)
-			entry.attrib.update(id=entries.attrib.get("next_id"), begin=begin, end=end)
-			entries.attrib.update(next_id=str(int(entries.attrib.get("next_id"))+1))
+			add_time_entry(tag, begin, end)
 			schedule.remove(scheduled)
-			log("Entered", tag, "(", entry.attrib.get("id"), ")")
-		tree.write(doc_path)
-		return log_string
 	elif argv[1] == "stop" or argv[1] == "end":
 		if len(argv) < 3:
 			log("Usage: stop |", command_palette["stop"])
 			return log_string
 
 		type = argv[2]
-		tree = ET.parse(doc_path)
 		current = tree.getroot().find("current")
-		entries = tree.getroot().find("entries")
 		for running in current:
 			if running.tag == type:
 
-				entry = ET.SubElement(entries, type)
-				entry.attrib.update(id=entries.attrib.get("next_id"), begin=running.attrib["begin"], end=sunix_time(argv[3]) if len(argv) > 3 else str(int(time.mktime(dt.datetime.now().timetuple()))))
-				entries.attrib.update(next_id=str(int(entries.attrib.get("next_id"))+1))
+				add_time_entry(type, running.attrib["begin"], sunix_time(argv[3]) if len(argv) > 3 else current_sunix_time())
 
 				current.remove(running)
 				tree.write(doc_path)
-				log("Entered", type, "(", entry.attrib.get("id"), ")")
 				return log_string
 		log("Couldn't find", type)
+		return log_string # without writing
 	elif argv[1] == "types":
-
-		tree = ET.parse(doc_path)
 		types = tree.getroot().find("types")
 		max_len = 5
 		for type in types:
@@ -268,9 +241,8 @@ def ztime_main(argv, doc_path):
 				max_len = len(type.tag)
 		for type in types:
 			log(type.tag.rjust(max_len+2), "|", type.attrib["color"])
+		return log_string # without writing
 	elif argv[1] == "running":
-
-		tree = ET.parse(doc_path)
 		running = tree.getroot().find("current")
 		max_len = 5
 		for run in running:
@@ -278,20 +250,44 @@ def ztime_main(argv, doc_path):
 				max_len = len(run.tag)
 		for run in running:
 			log(run.tag.rjust(max_len+2), "|", dt.datetime.fromtimestamp(int(run.attrib.get("begin"))).strftime("%m/%d/%y %H:%M"))
+		return log_string # without writing
 	elif argv[1] == "stat":
 		if len(argv) < 4:
 			log("Usage: stat |", command_palette["stat"])
 			return log_string
-		stat(argv, doc_path)
+		stat(argv)
+		return log_string # without writing
 	else:
 		instructions()
+		return log_string # without writing
+	tree.write(doc_path)
 	return log_string
+
+
+def add_time_entry(type, begin, end):
+	global tree
+	entries = tree.getroot().find("entries")
+	types = tree.getroot().find("types")
+
+	for t in types:
+		if t.tag == type:
+			if "parent" in t.attrib:
+				add_time_entry(t.attrib.get("parent"), begin, end)
+
+	entry = ET.SubElement(entries, type)
+	entry.attrib.update(id=entries.attrib.get("next_id"), begin=begin, end=end)
+	entries.attrib.update(next_id=str(int(entries.attrib.get("next_id"))+1))
+	log("Entered", type, "(", entry.attrib.get("id"), ")")
+
+
+def current_sunix_time():
+	return str(int(time.mktime(dt.datetime.now().timetuple())))
 
 def intersect(a_begin, a_end, b_begin, b_end):
 	return int(a_end) > int(b_begin) and int(a_begin) < int(b_end)
 
-def stat(argv, doc_path):
-	tree = ET.parse(doc_path)
+def stat(argv):
+	global tree
 	entries = tree.getroot().find("entries")
 	type = argv[2]
 	begin = unix_time(argv[3])
@@ -328,8 +324,8 @@ def stat(argv, doc_path):
 	if end-begin > 86400*14:
 		log(time_length_string(time_spent / ((end-begin)/604800)), "per week")
 
-def ztime_print(argv, doc_path):
-	tree = ET.parse(doc_path)
+def ztime_print(argv):
+	global tree
 	entries_t = tree.getroot().find("entries")
 	current_t = tree.getroot().find("current")
 	entries = []
@@ -403,8 +399,8 @@ def ztime_print(argv, doc_path):
 				log(' ', end="")
 		log("")
 
-def draw(argv, doc_path):
-	tree = ET.parse(doc_path)
+def draw(argv):
+	global tree
 	entries_t = tree.getroot().find("entries")
 	current_t = tree.getroot().find("current")
 	entries = []
