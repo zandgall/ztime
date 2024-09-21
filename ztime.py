@@ -328,10 +328,13 @@ def ztime_print(argv):
 	global tree
 	entries_t = tree.getroot().find("entries")
 	current_t = tree.getroot().find("current")
+	schedule_t = tree.getroot().find("schedule")
 	entries = []
 	for e in entries_t:
 		entries.append(e)
 	for e in current_t:
+		entries.append(e)
+	for e in schedule_t:
 		entries.append(e)
 	included_entries = []
 
@@ -383,14 +386,27 @@ def ztime_print(argv):
 					gb = int(color_str[3:5], 16)
 					bb = int(color_str[5:7], 16)
 					(h, s, v) = colorsys.rgb_to_hsv(rb / 255.0, gb/255.0, bb/255.0)
+
+					textstyle = ""
+					if include["xml"] in schedule_t:
+						h = h * 0.3 + (2.0 / 3.0) * 0.7
+						s = s * 0.3 + 0.35 * 0.7
+						v = v * 0.3 + 0.18 * 0.7
+						(rb, gb, bb) = colorsys.hsv_to_rgb(h, s, v)
+						rb = int(255*rb)
+						gb = int(255*gb)
+						bb = int(255*bb)
+						textstyle = "3;"
+
 					h += 0.25
 					if h > 1:
 						h -= 1
 					s = 1 - s
 					v = 1 - v
+
 					(rf, gf, bf) = colorsys.hsv_to_rgb(h, s, v)
 					if include["i"] < len(include["xml"].tag):
-						log(f"\033[38;2;{int(255*rf)};{int(255*gf)};{int(255*bf)}m\033[48;2;{rb};{gb};{bb}m{include["xml"].tag[include["i"]]}{Style.RESET_ALL}", end="")
+						log(f"\033[{textstyle}38;2;{int(255*rf)};{int(255*gf)};{int(255*bf)}m\033[48;2;{rb};{gb};{bb}m{include["xml"].tag[include["i"]]}{Style.RESET_ALL}", end="")
 						include["i"] = include["i"] + 1
 					else:
 						log('\033[48;2;'+str(rb)+';'+str(gb)+';'+str(bb)+'m '+Style.RESET_ALL, end="")
@@ -403,10 +419,13 @@ def draw(argv):
 	global tree
 	entries_t = tree.getroot().find("entries")
 	current_t = tree.getroot().find("current")
+	schedule_t = tree.getroot().find("schedule")
 	entries = []
 	for e in entries_t:
 		entries.append(e)
 	for e in current_t:
+		entries.append(e)
+	for e in schedule_t:
 		entries.append(e)
 	included_entries = []
 
@@ -486,6 +505,13 @@ def draw(argv):
 		begin = int(include["xml"].attrib["begin"])
 		end = int(include["xml"].attrib["end"])
 		level = include["level"]*120
+		tcolor = inverse(color)
+
+		if include["xml"] in schedule_t:
+			r = int(int(color[1] + color[2], 16) * 0.3 + 255 * 0.7)
+			g = int(int(color[3] + color[4], 16) * 0.3 + 255 * 0.7)
+			b = int(int(color[5] + color[6], 16) * 0.3 + 255 * 0.7)
+			color = (r, g, b)
 		
 		if end < begin:
 			log(f"Can't draw element <{include['xml'].tag} id={include['xml'].attrib['id']}> because begin is {dt.datetime.fromtimestamp(begin).strftime('%m/%d/%y %H:%M')} while end is {dt.datetime.fromtimestamp(end).strftime('%m/%d/%y %H:%M')}")
@@ -500,9 +526,9 @@ def draw(argv):
 		max_width = max(deffont.getlength(string_a), deffont.getlength(string_b), deffont.getlength(string_c))
 		fnt = ImageFont.truetype("basicbit3.ttf", 28 if max_width < get_x(end)-get_x(begin) else int(28*((get_x(end)-get_x(begin))/max_width)))
 		draw.font = fnt
-		draw.text((get_x(begin), level+8), string_a, fill=inverse(color), font=fnt)
-		draw.text(((get_x(begin)+get_x(end)-fnt.getlength(string_b))/2, level+(120-fnt.size)/2), string_b, align="center", fill=inverse(color), font=fnt)
-		draw.text((get_x(end)-fnt.getlength(string_c), level+120-fnt.size-6), string_c, fill=inverse(color), font=fnt)
+		draw.text((get_x(begin), level+8), string_a, fill=tcolor, font=fnt)
+		draw.text(((get_x(begin)+get_x(end)-fnt.getlength(string_b))/2, level+(120-fnt.size)/2), string_b, align="center", fill=tcolor, font=fnt)
+		draw.text((get_x(end)-fnt.getlength(string_c), level+120-fnt.size-6), string_c, fill=tcolor, font=fnt)
 	image.save("time.png")
 
 if __name__ == "__main__":
